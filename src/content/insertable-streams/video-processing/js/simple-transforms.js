@@ -57,3 +57,32 @@ class DelayTransform { // eslint-disable-line no-unused-vars
   /** @override */
   destroy() {}
 }
+
+/**
+ * Crops the frame to half-size.
+ * @implements {FrameTransform} in pipeline.js
+ */
+class CropTransform { // eslint-disable-line no-unused-vars
+  constructor() {
+    /** @private {?number} timestamp of first frame */
+    this.firstTimestamp_ = null;
+  }
+  /** @override */
+  async init() {}
+  /** @override */
+  async transform(frame, controller) {
+    const timestamp = frame.timestamp;
+    if (!this.firstTimestamp_) {
+      this.firstTimestamp_ = timestamp;
+    }
+    // Cycle every 4 seconds.
+    const loop = (timestamp - this.firstTimestamp_) / 4000000;
+    const left = (Math.sin(Math.PI / 2 * loop) + 1) / 2 * frame.visibleRegion.width / 2;
+    const top = (Math.cos(Math.PI / 2 * loop) + 1) / 2 * frame.visibleRegion.height / 2;
+    const croppedFrame = new VideoFrame(frame, {visibleRegion: {left, top, width: frame.visibleRegion.width / 2, height: frame.visibleRegion.height / 2}});
+    frame.close();
+    controller.enqueue(croppedFrame);
+  }
+  /** @override */
+  destroy() {}
+}

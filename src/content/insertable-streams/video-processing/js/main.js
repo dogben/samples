@@ -28,7 +28,7 @@ if (VideoFrame.prototype.close === undefined) {
 /* global PeerConnectionSink */ // defined in peer-connection-sink.js
 /* global PeerConnectionSource */ // defined in peer-connection-source.js
 /* global Pipeline */ // defined in pipeline.js
-/* global NullTransform, DropTransform, DelayTransform */ // defined in simple-transforms.js
+/* global NullTransform, DropTransform, DelayTransform, CropTransform */ // defined in simple-transforms.js
 /* global VideoSink */ // defined in video-sink.js
 /* global VideoSource */ // defined in video-source.js
 /* global WebGLTransform */ // defined in webgl-transform.js
@@ -233,6 +233,10 @@ function initUI() {
       case 'noop':
         // Defined in simple-transforms.js.
         pipeline.updateTransform(new NullTransform());
+        break;
+      case 'crop':
+        // Defined in simple-transforms.js.
+        pipeline.updateTransform(new CropTransform());
         break;
       case 'delay':
         // Defined in simple-transforms.js.
