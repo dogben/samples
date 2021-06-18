@@ -202,7 +202,12 @@ class WebGPUTransform {
     this.device_.queue.submit([commandEncoder.finish()]);
 
     // TODO(cwallez): This should work, but it doesn't.
-    controller.enqueue(new VideoFrame(this.canvas_, {timestamp}));
+    // controller.enqueue(new VideoFrame(this.canvas_, {timestamp}));
+
+    // This works on Mac, but not Linux.
+    const outImageBitmap = this.canvas_.transferToImageBitmap();
+    controller.enqueue(new VideoFrame(outImageBitmap, {timestamp}));
+
     videoTexture.destroy();
   }
 
